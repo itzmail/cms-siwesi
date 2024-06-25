@@ -1,5 +1,6 @@
 import React from 'react';
 import Swal from 'sweetalert2';
+import StorageUtil from '../../utils/storage';
 
 const Logout = ({ setIsAuthenticated }) => {
   const handleLogout = () => {
@@ -18,7 +19,7 @@ const Logout = ({ setIsAuthenticated }) => {
             Swal.showLoading();
           },
           willClose: () => {
-            localStorage.setItem('is_authenticated', false);
+            StorageUtil.clearStorage();
             setIsAuthenticated(false);
           },
         });

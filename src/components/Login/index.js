@@ -1,35 +1,45 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-const Login = ({ setIsAuthenticated }) => {
-  const adminEmail = 'admin@example.com';
-  const adminPassword = 'qwerty';
+import { login } from '../../api';
+import StorageUtil from '../../utils/storage';
 
-  const [email, setEmail] = useState('admin@example.com');
-  const [password, setPassword] = useState('qwerty');
+const Login = ({ setIsAuthenticated }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = e => {
     e.preventDefault();
+    if (email && password) {
+      Swal.showLoading();
 
-    if (email === adminEmail && password === adminPassword) {
-      Swal.fire({
-        timer: 1500,
-        showConfirmButton: false,
-        willOpen: () => {
-          Swal.showLoading();
-        },
-        willClose: () => {
-          localStorage.setItem('is_authenticated', true);
-          setIsAuthenticated(true);
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Successfully logged in!',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        },
+      login(email, password).then(response => {
+        StorageUtil.setToken(response['accessToken']);
+        StorageUtil.setIsAuthenticated(true);
+        setIsAuthenticated(true);
+      }).catch(error => {
+        console.log(error);
       });
+
+      Swal.close();
+      // Swal.fire({
+      //   timer: 1500,
+      //   showConfirmButton: false,
+      //   willOpen: () => {
+          
+      //   },
+      //   willClose: () => {
+      //     localStorage.setItem('is_authenticated', true);
+      //     setIsAuthenticated(true);
+
+      //     Swal.fire({
+      //       icon: 'success',
+      //       title: 'Successfully logged in!',
+      //       showConfirmButton: false,
+      //       timer: 1500,
+      //     });
+      //   },
+      // });
     } else {
       Swal.fire({
         timer: 1500,
@@ -67,7 +77,7 @@ const Login = ({ setIsAuthenticated }) => {
           id="password"
           type="password"
           name="password"
-          placeholder="qwerty"
+          placeholder="password"
           value={password}
           onChange={e => setPassword(e.target.value)}
         />

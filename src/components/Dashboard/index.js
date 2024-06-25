@@ -7,17 +7,36 @@ import Add from './Add';
 import Edit from './Edit';
 
 import { employeesData } from '../../data';
+import { getListWaduk } from '../../api';
 
 const Dashboard = ({ setIsAuthenticated }) => {
+  const [waduk, setWaduk] = useState([]);
   const [employees, setEmployees] = useState(employeesData);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
+    getApiWaduk();
     const data = JSON.parse(localStorage.getItem('employees_data'));
     if (data !== null && Object.keys(data).length !== 0) setEmployees(data);
   }, []);
+
+  const getApiWaduk = async () => {
+    Swal.showLoading();
+    getListWaduk().then(response => {
+      setWaduk(response);
+    }).catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to fetch data' + error,
+        timer: 1500,
+        showConfirmButton: false,
+        });
+    });
+    Swal.close();
+  }
 
   const handleEdit = id => {
     const [employee] = employees.filter(employee => employee.id === id);
@@ -65,6 +84,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
             employees={employees}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            dataWaduk={waduk}
           />
         </>
       )}
