@@ -1,6 +1,6 @@
 import StorageUtil from '../utils/storage';
 
-const url = process.env.REACT_APP_BASE_URL;
+const url = process.env.REACT_APP_API_BASE_URL;
 const listWadukUrl = 'waduk/all';
 const detailWadukUrl = 'waduk/detail';
 const addWadukUrl = 'waduk/add';

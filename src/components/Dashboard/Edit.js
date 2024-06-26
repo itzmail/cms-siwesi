@@ -37,7 +37,7 @@ const EditDataScreen = (props) => {
   const [foto, setFoto] = useState([]);
   const showFoto = useMemo(() => {
     return foto.map((item) => {
-      return `${process.env.REACT_APP_PRD_URL}images/${item}`;
+      return `${process.env.REACT_APP_API_BASE_URL}images/${item}`;
     });
   }, [foto])
 
