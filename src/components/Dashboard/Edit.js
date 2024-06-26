@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { getDesa, getKecamatan, getWilayah, addWaduk, getBidang, getDetailWaduk, updateWaduk } from '../../api';
+import { BASE_URL } from '../../constant';
 
 const EditDataScreen = (props) => {
   const {id} = useParams();
@@ -37,7 +38,7 @@ const EditDataScreen = (props) => {
   const [foto, setFoto] = useState([]);
   const showFoto = useMemo(() => {
     return foto.map((item) => {
-      return `${process.env.REACT_APP_API_BASE_URL}images/${item}`;
+      return `${BASE_URL}images/${item}`;
     });
   }, [foto])
 

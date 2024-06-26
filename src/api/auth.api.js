@@ -1,3 +1,4 @@
+import { BASE_URL } from "../constant";
 import StorageUtil from "../utils/storage";
 
 const loginUrl = 'auth/login';
@@ -20,7 +21,7 @@ const login = async (email, pass) => {
                 redirect: "follow"
             };
 
-            const response = await fetch(process.env.REACT_APP_API_BASE_URL + loginUrl, requestOptions);
+            const response = await fetch(BASE_URL + loginUrl, requestOptions);
             const json = await response.json();
             if (response.status === 200) {
                 res(json['data']);
@@ -49,7 +50,7 @@ const cekValidToken = async () => {
                 redirect: "follow"
             };
 
-            const response = await fetch(process.env.REACT_APP_API_BASE_URL + cekValidTokenUrl, requestOptions);
+            const response = await fetch(BASE_URL + cekValidTokenUrl, requestOptions);
             const json = await response.json();
             if (response.status === 200) {
                 res(json['data']);

@@ -1,4 +1,6 @@
-const url = process.env.REACT_APP_API_BASE_URL;
+import { BASE_URL } from "../constant";
+
+const url = BASE_URL;
 const mwilayahUrl = 'master/wilayah';
 const mkecamatanUrl = 'master/kecamatan';
 const mdesaUrl = 'master/desa';
