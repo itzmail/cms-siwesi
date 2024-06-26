@@ -5,6 +5,7 @@ import Dashboard from '../Dashboard';
 import AddDataScreen from '../Dashboard/Add';
 import { cekValidToken } from '../../api';
 import { useNavigate } from 'react-router-dom';
+import EditDataScreen from '../Dashboard/Edit';
 
 const App = () => {
 
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path='/add' element={<AddDataScreen />} />
+        <Route path='/edit/:id' element={<EditDataScreen />} />
         {/* Optionally, handle redirection for users accessing the root path */}
       </Routes>
   )

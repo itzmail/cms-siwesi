@@ -32,6 +32,7 @@ const AddDataScreen = () => {
 
   const [dataInput, setDataInput] = useState({});
   const [foto, setFoto] = useState([]);
+  const [showFoto, setShowFoto] = useState([]);
 
   const navigate = useNavigate();
 
@@ -58,6 +59,16 @@ const AddDataScreen = () => {
     }
   }
 
+  const handleFileFoto = (e) => {
+    const files = e.target.files;
+    const filesArr = Array.from(files).map((file) => URL.createObjectURL(file));
+    setShowFoto((prev) => prev.concat(filesArr));
+    setFoto((prev) => prev.concat(files));
+    Array.from(e.target.files).map(
+      (file) => URL.revokeObjectURL(file)
+    );
+  }
+
   const postData = async () => {
     try {
       const post = await addWaduk({ data: dataInput, foto });
@@ -76,6 +87,12 @@ const AddDataScreen = () => {
         text: err.message,
       });
     }
+  }
+
+  const removeImage = (index) => {
+    const newFoto = foto.filter((item, idx) => idx !== index);
+    setFoto(newFoto);
+    setShowFoto(showFoto.filter((item, idx) => idx !== index));
   }
 
   const inputData = (e) => {
@@ -224,9 +241,26 @@ const AddDataScreen = () => {
           value={dataInput.pompa}
           onChange={inputData}
         />
-        <InputComponent label="foto" htmlFor="foto" type={'file'} onChange={(e) => {
-          setFoto([...foto, ...e.target.files]);
-        }} />
+        <div className='flex flex-col'>
+          <InputComponent label="foto" htmlFor="foto" type={'file'} onChange={(e) => {
+            handleFileFoto(e);
+            setFoto([...foto, ...e.target.files]);
+          }} />
+          {/* {
+            showFoto.map((item, index) => (
+              <div className='relative'>
+                <div 
+                  className='absolute top-0 right-0 bg-red-500 text-white p-1 cursor-pointer'
+                onClick={() => {
+                  removeImage(index);
+                }}>
+                  X
+                </div>
+                <img key={index} src={item} alt={item} style={{ width: '100px', height: '100px' }} />
+              </div>
+            ))
+          } */}
+        </div>
         <InputComponent label="Keterangan" htmlFor="keterangan" 
           value={dataInput.keterangan}
           onChange={inputData}

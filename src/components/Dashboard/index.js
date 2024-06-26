@@ -59,6 +59,7 @@ const Dashboard = () => {
 
   const handleEdit = id => {
     // const [employee] = employees.filter(employee => employee.id === id);
+    navigate(`/edit/${id}`)
     setIdWaduk(id);
     // setSelectedEmployee(employee);
     setIsEditing(true);
@@ -119,15 +120,6 @@ const Dashboard = () => {
           employees={employees}
           setEmployees={setEmployees}
           setIsAdding={setIsAdding}
-        />
-      )}
-      {isEditing && (
-        <Edit
-          // employees={employees}
-          idWaduk={idWaduk}
-          // selectedEmployee={selectedEmployee}
-          setEmployees={setEmployees}
-          setIsEditing={setIsEditing}
         />
       )}
     </div>
