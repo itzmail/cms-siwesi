@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
-const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
-  const id = selectedEmployee.id;
+const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, idWaduk }) => {
 
-  const [firstName, setFirstName] = useState(selectedEmployee.firstName);
-  const [lastName, setLastName] = useState(selectedEmployee.lastName);
-  const [email, setEmail] = useState(selectedEmployee.email);
-  const [salary, setSalary] = useState(selectedEmployee.salary);
-  const [date, setDate] = useState(selectedEmployee.date);
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [email, setEmail] = useState();
+  const [salary, setSalary] = useState();
+  const [date, setDate] = useState();
 
-  const handleUpdate = e => {
+  const [namaWaduk, setNamaWaduk] = useState("");
+
+  useEffect(() => {
+    getDetailWaduk();
+  }, []);
+
+  const getDetailWaduk = async () => {
+    getDetailWaduk(idWaduk).then(response => {
+      setNamaWaduk(response.nama);
+    }).catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to fetch data' + error,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    });
+  }
+
+  /* const handleUpdate = e => {
     e.preventDefault();
 
     if (!firstName || !lastName || !email || !salary || !date) {
@@ -49,11 +68,11 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
       showConfirmButton: false,
       timer: 1500,
     });
-  };
+  }; */
 
   return (
     <div className="small-container">
-      <form onSubmit={handleUpdate}>
+      <form>
         <h1>Edit Employee</h1>
         <label htmlFor="firstName">First Name</label>
         <input

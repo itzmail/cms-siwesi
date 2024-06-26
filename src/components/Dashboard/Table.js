@@ -21,9 +21,9 @@ const Table = ({ employees, handleEdit, handleDelete, dataWaduk }) => {
           <tr>
             <th>No.</th>
             <th>Nama Waduk</th>
-            <th>Wilayah</th>
             <th>Jenis</th>
-            <th>Keterangan</th>
+            <th>Wilayah</th>
+            <th>Alamat</th>
             <th colSpan={2} className="text-center">
               Actions
             </th>
@@ -32,15 +32,17 @@ const Table = ({ employees, handleEdit, handleDelete, dataWaduk }) => {
         <tbody>
           {dataWaduk.length > 0 ? (
             dataWaduk.map((waduk, i) => (
-              <tr key={waduk.id}>
+              <tr key={waduk.informasi.id}>
                 <td>{i + 1}</td>
                 <td>{waduk.informasi.nama}</td>
-                <td>{waduk.informasi.wilayah}</td>
                 <td>{waduk.informasi.jenis}</td>
-                <td>{waduk.informasi.keterangan}</td>
+                <td>{waduk.informasi.wilayah}</td>
+                <td>{waduk.alamat.alamat}</td>
                 <td className="text-right">
                   <button
-                    onClick={() => {}}
+                    onClick={() => {
+                      handleEdit(waduk.informasi.id);
+                    }}
                     className="button muted-button"
                   >
                     Edit
@@ -48,7 +50,9 @@ const Table = ({ employees, handleEdit, handleDelete, dataWaduk }) => {
                 </td>
                 <td className="text-left">
                   <button
-                    onClick={() => {}}
+                    onClick={() => {
+                      handleDelete(waduk.informasi.id);
+                    }}
                     className="button muted-button"
                   >
                     Delete

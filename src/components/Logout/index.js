@@ -1,8 +1,11 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import StorageUtil from '../../utils/storage';
+import { useNavigate } from 'react-router-dom';
 
-const Logout = ({ setIsAuthenticated }) => {
+const Logout = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     Swal.fire({
       icon: 'question',
@@ -20,7 +23,7 @@ const Logout = ({ setIsAuthenticated }) => {
           },
           willClose: () => {
             StorageUtil.clearStorage();
-            setIsAuthenticated(false);
+            navigate('/login', { replace: true });
           },
         });
       }

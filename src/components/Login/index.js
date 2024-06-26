@@ -3,10 +3,13 @@ import Swal from 'sweetalert2';
 
 import { login } from '../../api';
 import StorageUtil from '../../utils/storage';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const handleLogin = e => {
     e.preventDefault();
@@ -14,32 +17,29 @@ const Login = ({ setIsAuthenticated }) => {
       Swal.showLoading();
 
       login(email, password).then(response => {
-        StorageUtil.setToken(response['accessToken']);
-        StorageUtil.setIsAuthenticated(true);
-        setIsAuthenticated(true);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Login success',
+          showConfirmButton: false,
+          timer: 1500,
+          willClose: () => {
+            StorageUtil.setToken(response['accessToken']);
+            StorageUtil.setIsAuthenticated(true);
+            navigate('/dashboard', { replace: true })
+          }
+        });
       }).catch(error => {
-        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Error login ' + error,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       });
 
       Swal.close();
-      // Swal.fire({
-      //   timer: 1500,
-      //   showConfirmButton: false,
-      //   willOpen: () => {
-          
-      //   },
-      //   willClose: () => {
-      //     localStorage.setItem('is_authenticated', true);
-      //     setIsAuthenticated(true);
-
-      //     Swal.fire({
-      //       icon: 'success',
-      //       title: 'Successfully logged in!',
-      //       showConfirmButton: false,
-      //       timer: 1500,
-      //     });
-      //   },
-      // });
     } else {
       Swal.fire({
         timer: 1500,

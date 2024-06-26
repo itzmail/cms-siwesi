@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../Login';
 import Dashboard from '../Dashboard';
-import StorageUtil from '../../utils/storage';
+import AddDataScreen from '../Dashboard/Add';
+import { cekValidToken } from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-  useEffect(() => {
-    setIsAuthenticated(StorageUtil.getIsAuthenticated());
-  }, []);
+  const navigate = useNavigate();
+  
+  async function isAuthenticated(){
+    try {
+      const valid = await cekValidToken();
+      console.log("this valid?", valid);
+      if (valid) {
+        navigate('/dashboard');
+      }
+      navigate('/login');
+    } catch (error) {
+      console.log("error", error);
+      navigate('/login');
+    }
+  }
+
 
   return (
-    <>
-      {isAuthenticated ? (
-        <Dashboard setIsAuthenticated={setIsAuthenticated} />
-      ) : (
-        <Login setIsAuthenticated={setIsAuthenticated} />
-      )}
-    </>
-  );
+      <Routes>
+        <Route path="/" element={<Navigate replace to={isAuthenticated ? "/dashboard" : "/login"} />} />
+        <Route path="/crud-app" element={isAuthenticated ? <Navigate replace to="/dashboard" /> : <Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path='/add' element={<AddDataScreen />} />
+        {/* Optionally, handle redirection for users accessing the root path */}
+      </Routes>
+  )
 };
 
 export default App;

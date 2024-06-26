@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 import Header from './Header';
 import Table from './Table';
@@ -7,20 +8,38 @@ import Add from './Add';
 import Edit from './Edit';
 
 import { employeesData } from '../../data';
-import { getListWaduk } from '../../api';
+import { cekValidToken, deleteWaduk, getListWaduk } from '../../api';
 
-const Dashboard = ({ setIsAuthenticated }) => {
+const Dashboard = () => {
+  const navigate = useNavigate();
+
   const [waduk, setWaduk] = useState([]);
   const [employees, setEmployees] = useState(employeesData);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  const [idWaduk, setIdWaduk] = useState(null);
+
   useEffect(() => {
-    getApiWaduk();
+    isValidLoggedIn();
+    
     const data = JSON.parse(localStorage.getItem('employees_data'));
     if (data !== null && Object.keys(data).length !== 0) setEmployees(data);
   }, []);
+
+  const isValidLoggedIn = async () => {
+   try {
+    const valid = await cekValidToken();
+    if (!valid) {
+      navigate('/login', { replace: true });
+      return
+    }
+    getApiWaduk();
+   } catch(err) {
+    navigate('/login', { replace: true });
+   }
+  }
 
   const getApiWaduk = async () => {
     Swal.showLoading();
@@ -39,9 +58,9 @@ const Dashboard = ({ setIsAuthenticated }) => {
   }
 
   const handleEdit = id => {
-    const [employee] = employees.filter(employee => employee.id === id);
-
-    setSelectedEmployee(employee);
+    // const [employee] = employees.filter(employee => employee.id === id);
+    setIdWaduk(id);
+    // setSelectedEmployee(employee);
     setIsEditing(true);
   };
 
@@ -53,22 +72,30 @@ const Dashboard = ({ setIsAuthenticated }) => {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
-    }).then(result => {
+    }).then(async (result) => {
       if (result.value) {
-        const [employee] = employees.filter(employee => employee.id === id);
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: `${employee.firstName} ${employee.lastName}'s data has been deleted.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-
-        const employeesCopy = employees.filter(employee => employee.id !== id);
-        localStorage.setItem('employees_data', JSON.stringify(employeesCopy));
-        setEmployees(employeesCopy);
+       const del = await deleteWaduk(id);
+        if(del) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: 'Your data has been deleted.',
+            timer: 1500,
+            showConfirmButton: false,
+            willClose: () => {
+              getApiWaduk();
+            }
+          });
+        }
       }
+    }).catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to delete data' + error,
+        timer: 1500,
+        showConfirmButton: false,
+        });
     });
   };
 
@@ -78,7 +105,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
         <>
           <Header
             setIsAdding={setIsAdding}
-            setIsAuthenticated={setIsAuthenticated}
           />
           <Table
             employees={employees}
@@ -97,8 +123,9 @@ const Dashboard = ({ setIsAuthenticated }) => {
       )}
       {isEditing && (
         <Edit
-          employees={employees}
-          selectedEmployee={selectedEmployee}
+          // employees={employees}
+          idWaduk={idWaduk}
+          // selectedEmployee={selectedEmployee}
           setEmployees={setEmployees}
           setIsEditing={setIsEditing}
         />

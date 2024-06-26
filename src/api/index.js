@@ -1,4 +1,5 @@
-import { login } from './auth/login.api';
-import { getListWaduk } from './master';
+import { login, cekValidToken } from './auth.api';
+import { getListWaduk, getDetailWaduk, addWaduk, deleteWaduk } from './waduk.api';
+import { getWilayah, getDesa, getKecamatan, getBidang } from './master.api';
 
-export { login, getListWaduk }
+export { login, getListWaduk, getDetailWaduk, addWaduk, getWilayah, getDesa, getKecamatan, getBidang, deleteWaduk, cekValidToken }

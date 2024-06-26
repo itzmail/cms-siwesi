@@ -1,14 +1,16 @@
 import React from 'react';
 
 import Logout from '../Logout';
+import { useNavigate } from 'react-router-dom';
 
-const Header = ({ setIsAdding, setIsAuthenticated }) => {
+const Header = () => {
+  const navigate = useNavigate();
   return (
     <header>
       <h1>CMS SI Wesi</h1>
       <div style={{ marginTop: '30px', marginBottom: '18px' }}>
-        <button onClick={() => setIsAdding(true)}>Add Data</button>
-        <Logout setIsAuthenticated={setIsAuthenticated} />
+        <button onClick={() => navigate('/add')}>Add Data</button>
+        <Logout />
       </div>
     </header>
   );
