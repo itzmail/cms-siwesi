@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import EditDataScreen from '../Dashboard/Edit';
 
 const App = () => {
-
+  console.log("TESTIN MANTAP")
   const navigate = useNavigate();
   
   async function isAuthenticated(){
